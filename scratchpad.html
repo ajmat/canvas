@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC"-//W3C//DTD XHTML 1.0 Transitional//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Untitled Document</title>
+        <script type="text/javascript" src="jquery-1.11.3.min.js"></script>
+    </head>
+
+    <body>
+        <canvas id="myCanvas" width="400" height="400" style="border:1px solid
+            #000000;"> </canvas>
+            <button id="clearCan">Clear</button>
+            <button id="greenCol">Green</button>
+            <button id="blueCol">Blue</button>
+
+        <script>
+var c = document.getElementById('myCanvas');
+var ctx = c.getContext('2d');
+ctx.fillStyle = 'Pink';
+ctx.fillRect(10,0,200,300);
+ctx.fillStyle = 'red';
+ctx.fillText("Hello Ajmat", 10,50);
+ctx.font = "40px Arial";
+ctx.strokeStyle = 'yellow';
+ctx.textAlign = "center";
+ctx.strokeText('Ajmat Ansari', 10, 60);
+ctx.fillText("Hello World", c.width / 2, c.height / 2);
+
+    var clickX = new Array();
+    var clickY = new Array();
+    var clickDrag = new Array();
+    var paint;
+    var penColor = '#df4b26';
+
+    function addClick(x, y, dragging) {
+        clickX.push(x);
+        clickY.push(y);
+        clickDrag.push(dragging);
+    }
+
+    function redraw() {
+            //ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Clears the canvas
+
+            ctx.strokeStyle = penColor;
+            ctx.lineJoin = "round";
+            ctx.lineWidth = 5;
+
+            for (var i = 0; i < clickX.length; i++) {
+                ctx.beginPath();
+                if (clickDrag[i] && i) {
+                    ctx.moveTo(clickX[i - 1], clickY[i - 1]);
+                } else {
+                    ctx.moveTo(clickX[i] - 1, clickY[i]);
+                }
+                ctx.lineTo(clickX[i], clickY[i]);
+                ctx.closePath();
+                ctx.stroke();
+            }
+        }
+
+    $('#myCanvas').mousedown(function (e) {
+        var mouseX = e.pageX;
+        var mouseY = e.pageY - this.offsetTop;
+        console.log(e.pageY);
+
+        paint = true;
+        addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+        redraw();
+    });
+
+    $('#myCanvas').mousemove(function (e) {
+            if (paint) {
+                addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+                redraw();
+            }
+        });
+
+    $('#myCanvas').mouseup(function (e) {
+            paint = false;
+            clickX = [];
+        clickY = [];
+        clickDrag = [];
+        });
+    
+     $('#greenCol').mouseup(function (e) {
+            penColor = 'green';
+        });
+    
+    $('#blueCol').mouseup(function (e) {
+            penColor = 'blue';
+        });
+
+    $('#clearCan').click(function(){
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        clickX =[];
+        clickY = [];
+        clickDrag = [];
+
+    });
+    
+
+</script>
+    </body>
+</html>
